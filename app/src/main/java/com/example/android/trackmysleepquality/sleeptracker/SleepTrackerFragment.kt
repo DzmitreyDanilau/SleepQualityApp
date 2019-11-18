@@ -14,6 +14,7 @@ import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 import com.example.android.trackmysleepquality.viewmodels.SleepTrackerViewModel
 import com.example.android.trackmysleepquality.viewmodels.SleepTrackerViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 
 class SleepTrackerFragment : Fragment() {
     lateinit var viewModel: SleepTrackerViewModel
@@ -38,6 +39,16 @@ class SleepTrackerFragment : Fragment() {
             it?.let {
                 findNavController().navigate(SleepTrackerFragmentDirections.actionSleepTrackerFragmentToSleepQualityFragment(it.nightId))
                 viewModel.doneNavigation()
+            }
+        })
+        viewModel.showSnackBarEvent.observe(this, Observer {
+            if (it == true) {
+                Snackbar.make(
+                        activity!!.findViewById(android.R.id.content),
+                        getString(R.string.cleared_message),
+                        Snackbar.LENGTH_SHORT
+                ).show()
+                viewModel.doneShowingSnackbar()
             }
         })
     }
