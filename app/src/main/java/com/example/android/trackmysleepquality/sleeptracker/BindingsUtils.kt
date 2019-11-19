@@ -10,7 +10,7 @@ import com.example.android.trackmysleepquality.database.SleepNight
 
 @BindingAdapter("sleepDurationFormatted")
 fun TextView.setSleepDurationFormatted(item: SleepNight) {
-    val text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMillis, resources)
+    text = convertDurationToFormatted(item.startTimeMilli, item.endTimeMillis, resources)
 }
 
 @BindingAdapter("sleepQualityString")
