@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.example.android.trackmysleepquality.R
+import com.example.android.trackmysleepquality.adapters.SleepNightRecyclerViewAdapter
 import com.example.android.trackmysleepquality.database.SleepDatabase
 import com.example.android.trackmysleepquality.databinding.FragmentSleepTrackerBinding
 import com.example.android.trackmysleepquality.viewmodels.SleepTrackerViewModel
@@ -18,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 
 class SleepTrackerFragment : Fragment() {
     lateinit var viewModel: SleepTrackerViewModel
+    lateinit var adapter: SleepNightRecyclerViewAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -30,6 +32,8 @@ class SleepTrackerFragment : Fragment() {
                 .of(this, viewModelFactory).get(SleepTrackerViewModel::class.java)
         binding.lifecycleOwner = this
         binding.sleepTrackerViewModel = viewModel
+        initRecyclerView()
+        binding.rvSleepList.adapter = adapter
         subscribeObservers()
         return binding.root
     }
@@ -51,5 +55,15 @@ class SleepTrackerFragment : Fragment() {
                 viewModel.doneShowingSnackbar()
             }
         })
+
+        viewModel.nights.observe(this, Observer {
+            it?.let {
+                adapter.sleepItemsList = it
+            }
+        })
+    }
+
+    fun initRecyclerView() {
+        adapter = SleepNightRecyclerViewAdapter()
     }
 }
