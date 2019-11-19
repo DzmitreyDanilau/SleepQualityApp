@@ -63,7 +63,7 @@ class SleepTrackerFragment : Fragment() {
         })
     }
 
-    fun initRecyclerView() {
+    private fun initRecyclerView() {
         adapter = SleepNightRecyclerViewAdapter()
     }
 }
