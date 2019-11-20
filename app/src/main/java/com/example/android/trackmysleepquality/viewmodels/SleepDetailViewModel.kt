@@ -1,5 +1,6 @@
 package com.example.android.trackmysleepquality.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,6 +30,7 @@ class SleepDetailViewModel(
 
 
     init {
+        Log.d("SleepDetailViewModel","Thead: ${Thread.currentThread().name}")
         night = database.getNightWithId(sleepNightKey)
     }
 
@@ -68,4 +70,7 @@ class SleepDetailViewModel(
         _navigateToSleepTracker.value = true
     }
 
+    fun onSleepNightNughtClicked(id: Long){
+        _navigateToSleepTracker.value
+    }
 }

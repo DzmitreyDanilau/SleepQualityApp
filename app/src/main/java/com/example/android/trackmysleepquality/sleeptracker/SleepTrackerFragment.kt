@@ -64,6 +64,13 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
                 adapter.submitList(it)
             }
         })
+        viewModel.navigateToSleepDetail.observe(this, Observer {
+            it?.let {
+                findNavController().navigate(SleepTrackerFragmentDirections
+                        .actionSleepTrackerFragmentToSleepDetailFragment(it))
+                viewModel.onSleepDetailNavigated()
+            }
+        })
     }
 
     private fun initRecyclerView() {
@@ -73,6 +80,9 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
 
     override fun onNightClick(night: SleepNight) {
         Toast.makeText(context, "${night.nightId}", Toast.LENGTH_SHORT).show()
+        viewModel.onSleepNightNightClicked(night.nightId)
     }
+
+
 }
 
