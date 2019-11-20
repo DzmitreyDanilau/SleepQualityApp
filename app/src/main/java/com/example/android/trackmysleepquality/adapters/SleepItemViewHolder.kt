@@ -5,13 +5,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.database.SleepNight
 import com.example.android.trackmysleepquality.databinding.SleepListItemBinding
+import com.example.android.trackmysleepquality.sleeptracker.OnSleepNightListener
 
 class SleepItemViewHolder private constructor(private val binding: SleepListItemBinding
 )
     : RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(item: SleepNight) {
+    fun bind(item: SleepNight, listener: OnSleepNightListener) {
         binding.sleep = item
+        binding.clickListener = listener
         binding.executePendingBindings()
     }
 

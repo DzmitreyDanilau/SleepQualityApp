@@ -17,22 +17,30 @@ import com.example.android.trackmysleepquality.viewmodels.SleepQualityViewModelF
 
 class SleepQualityFragment : Fragment() {
     lateinit var viewModel: SleepQualityViewModel
+    lateinit var fragmentArgs: SleepQualityFragmentArgs
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            fragmentArgs = SleepQualityFragmentArgs.fromBundle(it)
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
         val binding: FragmentSleepQualityBinding = DataBindingUtil.inflate(
                 inflater, R.layout.fragment_sleep_quality, container, false)
         val application = requireNotNull(this.activity).application
-        val arguments = SleepQualityFragmentArgs.fromBundle(arguments!!)
         val db = SleepDatabase.getInstance(application).sleepDataBaseDao
-        val viewModelFactory = SleepQualityViewModelFactory(arguments.sleepNightKey, db)
+        val viewModelFactory = SleepQualityViewModelFactory(fragmentArgs.sleepNightKey, db)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SleepQualityViewModel::class.java)
         binding.sleepQualityViewModel = viewModel
-        subscrObservers()
+        subscribeObservers()
         return binding.root
     }
 
-    private fun subscrObservers() {
+    private fun subscribeObservers() {
         viewModel.navigateToSleeptracker.observe(this, Observer {
             if (it == true) {
                 findNavController().navigate(SleepQualityFragmentDirections.actionSleepQualityFragmentToSleepTrackerFragment())
