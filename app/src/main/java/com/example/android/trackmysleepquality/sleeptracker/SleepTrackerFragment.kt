@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.android.trackmysleepquality.R
 import com.example.android.trackmysleepquality.adapters.SleepNightRecyclerViewAdapter
 import com.example.android.trackmysleepquality.database.SleepDatabase
@@ -24,6 +27,7 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
     lateinit var viewModel: SleepTrackerViewModel
     lateinit var adapter: SleepNightRecyclerViewAdapter
     lateinit var binding: FragmentSleepTrackerBinding
+    lateinit var layoutManager: RecyclerView.LayoutManager
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -32,6 +36,7 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
         val application = requireNotNull(activity).application
         val db = SleepDatabase.getInstance(application).sleepDataBaseDao
         val viewModelFactory = SleepTrackerViewModelFactory(db, application)
+
         viewModel = ViewModelProviders
                 .of(this, viewModelFactory).get(SleepTrackerViewModel::class.java)
         binding.lifecycleOwner = this
@@ -61,7 +66,7 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
 
         viewModel.nights.observe(this, Observer {
             it?.let {
-                adapter.submitList(it)
+                adapter.addHeaderAndSubmitList(it)
             }
         })
         viewModel.navigateToSleepDetail.observe(this, Observer {
@@ -74,6 +79,16 @@ class SleepTrackerFragment : Fragment(), OnSleepNightListener {
     }
 
     private fun initRecyclerView() {
+        val manager = GridLayoutManager(activity, 3)
+        manager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int {
+                return when (position) {
+                    0 -> 3
+                    else -> 1
+                }
+            }
+        }
+        binding.rvSleepList.layoutManager = manager
         adapter = SleepNightRecyclerViewAdapter(this)
         binding.rvSleepList.adapter = adapter
     }
